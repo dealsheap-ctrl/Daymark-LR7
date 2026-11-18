@@ -1,3 +1,4 @@
+
 name: Firebase Test Lab
 
 on:
@@ -11,24 +12,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install SDK
-  run: |
-    export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-    echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-    sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install Android SDK packages
+        run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
       - name: Build app and instrumentation APKs
         run: ./gradlew --no-daemon :app:assembleDebug :app:assembleDebugAndroidTest
+
       - id: auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
       - uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: '${{ secrets.FIREBASE_PROJECT_ID }}'
+
       - name: Run device matrix in Firebase Test Lab
         run: |
           gcloud firebase test android run \

@@ -1,3 +1,4 @@
+
 name: Android CI
 
 on:
@@ -13,17 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-     - name: Install Android SDK packages
-  run: |
-    export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-    echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-    sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install Android SDK packages
+        run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+
       - name: Lint, unit tests, coverage and assemble
         run: ./gradlew --no-daemon :app:lintDebug :app:ktlintCheck :benchmark:ktlintCheck :app:testDebugUnitTest :app:jacocoTestReport :app:jacocoTestCoverageVerification :app:assembleDebug :app:assembleDebugAndroidTest
+
       - name: Upload JVM reports and APKs
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,14 +51,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+
       - uses: gradle/actions/setup-gradle@v4
+
       - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+        run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+
       - name: Run instrumented suite on API 35 emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -60,6 +73,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           script: ./gradlew --no-daemon :app:connectedDebugAndroidTest :app:createDebugCoverageReport
+
       - name: Upload instrumentation reports
         if: always()
         uses: actions/upload-artifact@v4
