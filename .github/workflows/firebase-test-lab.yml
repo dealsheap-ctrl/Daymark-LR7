@@ -1,5 +1,4 @@
-
-name: Firebase Test Lab
+﻿name: Firebase Test Lab
 
 on:
   workflow_dispatch:

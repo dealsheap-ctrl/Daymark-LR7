@@ -1,5 +1,4 @@
-
-name: Android CI
+﻿name: Android CI
 
 on:
   pull_request:
@@ -26,7 +25,7 @@ jobs:
         run: |
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
 
       - name: Lint, unit tests, coverage and assemble
         run: ./gradlew --no-daemon :app:lintDebug :app:ktlintCheck :benchmark:ktlintCheck :app:testDebugUnitTest :app:jacocoTestReport :app:jacocoTestCoverageVerification :app:assembleDebug :app:assembleDebugAndroidTest
@@ -63,7 +62,7 @@ jobs:
         run: |
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
 
       - name: Run instrumented suite on API 35 emulator
         uses: reactivecircus/android-emulator-runner@v2
