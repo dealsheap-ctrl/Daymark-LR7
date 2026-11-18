@@ -9,10 +9,11 @@ class DaymarkTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         classLoader: ClassLoader,
         className: String?,
-        context: Context
-    ): Application = super.newApplication(
-        classLoader,
-        DaymarkTestApplication::class.java.name,
-        context
-    )
+        context: Context,
+    ): Application =
+        super.newApplication(
+            classLoader,
+            DaymarkTestApplication::class.java.name,
+            context,
+        )
 }

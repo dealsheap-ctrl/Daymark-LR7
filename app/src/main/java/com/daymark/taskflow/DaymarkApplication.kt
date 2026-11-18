@@ -18,17 +18,27 @@ open class DaymarkApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        database = Room.databaseBuilder(this, TaskDatabase::class.java, "daymark.db")
-            .addMigrations(TaskDatabase.MIGRATION_1_2, TaskDatabase.MIGRATION_2_3)
-            .build()
+        database =
+            Room
+                .databaseBuilder(this, TaskDatabase::class.java, "daymark.db")
+                .addMigrations(TaskDatabase.MIGRATION_1_2, TaskDatabase.MIGRATION_2_3)
+                .build()
         repository = DefaultTaskRepository(database.taskDao(), createRemoteApi())
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build()
+                StrictMode.ThreadPolicy
+                    .Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build(),
             )
             StrictMode.setVmPolicy(
-                StrictMode.VmPolicy.Builder().detectLeakedClosableObjects().penaltyLog().build()
+                StrictMode.VmPolicy
+                    .Builder()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .build(),
             )
         }
     }

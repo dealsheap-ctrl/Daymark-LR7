@@ -25,24 +25,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val app = application as DaymarkApplication
-        tasksViewModel = ViewModelProvider(
-            this,
-            TasksViewModel.Factory(app.repository)
-        )[TasksViewModel::class.java]
+        tasksViewModel =
+            ViewModelProvider(
+                this,
+                TasksViewModel.Factory(app.repository),
+            )[TasksViewModel::class.java]
 
         preferences = PreferenceStore(this)
 
         binding.btnHeaderAdd.setOnClickListener {
             AddTaskDialogFragment().show(
                 supportFragmentManager,
-                AddTaskDialogFragment.TAG
+                AddTaskDialogFragment.TAG,
             )
         }
 
         lifecycleScope.launch {
-            val selected = withContext(Dispatchers.IO) {
-                preferences.selectedTab(R.id.navigation_tasks)
-            }
+            val selected =
+                withContext(Dispatchers.IO) {
+                    preferences.selectedTab(R.id.navigation_tasks)
+                }
 
             binding.bottomNavigation.selectedItemId = selected
 
@@ -57,24 +59,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showScreen(itemId: Int) {
-        val currentTag = when (itemId) {
-            R.id.navigation_insights -> "insights"
-            R.id.navigation_settings -> "settings"
-            else -> "tasks"
-        }
+        val currentTag =
+            when (itemId) {
+                R.id.navigation_insights -> "insights"
+                R.id.navigation_settings -> "settings"
+                else -> "tasks"
+            }
 
         val currentlyVisible =
             supportFragmentManager.findFragmentById(R.id.fragmentContainer)
 
         if (currentlyVisible?.tag == currentTag) return
 
-        val fragment = when (itemId) {
-            R.id.navigation_insights -> InsightsFragment()
-            R.id.navigation_settings -> SettingsFragment()
-            else -> TasksFragment()
-        }
+        val fragment =
+            when (itemId) {
+                R.id.navigation_insights -> InsightsFragment()
+                R.id.navigation_settings -> SettingsFragment()
+                else -> TasksFragment()
+            }
 
-        supportFragmentManager.beginTransaction()
+        supportFragmentManager
+            .beginTransaction()
             .replace(R.id.fragmentContainer, fragment, currentTag)
             .commit()
     }

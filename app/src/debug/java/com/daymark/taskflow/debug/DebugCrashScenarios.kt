@@ -31,10 +31,11 @@ object DebugCrashScenarios {
         // penaltyLog records the violation. penaltyDeath is intentionally NOT used because
         // it kills the entire process before the UI can handle the diagnostic exception.
         StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
+            StrictMode.ThreadPolicy
+                .Builder()
                 .detectNetwork()
                 .penaltyLog()
-                .build()
+                .build(),
         )
         try {
             // A loopback-only request exercises main-thread network I/O without contacting

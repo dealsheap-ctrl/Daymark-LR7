@@ -18,7 +18,10 @@ internal class InMemoryTaskRepositoryFake : TaskRepository {
         return stored.id
     }
 
-    override suspend fun setCompleted(id: Long, completed: Boolean) {
+    override suspend fun setCompleted(
+        id: Long,
+        completed: Boolean,
+    ) {
         state.value = state.value.map { if (it.id == id) it.copy(isCompleted = completed) else it }
     }
 

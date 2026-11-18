@@ -14,25 +14,27 @@ import java.util.concurrent.TimeUnit
 class HttpTaskApi(
     private val baseUrl: String = DEFAULT_BASE_URL,
     private val client: OkHttpClient = defaultClient(),
-    private val gson: Gson = Gson()
+    private val gson: Gson = Gson(),
 ) : RemoteTaskApi {
-
     private val endpoint = baseUrl.trimEnd('/') + "/todos?_limit=5"
 
     override suspend fun fetchTodos(): List<RemoteTodo> =
         withContext(Dispatchers.IO) {
-            val request = Request.Builder()
-                .url(endpoint)
-                .get()
-                .build()
+            val request =
+                Request
+                    .Builder()
+                    .url(endpoint)
+                    .get()
+                    .build()
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
                     throw HttpStatusException(response.code)
                 }
 
-                val body = response.body?.string()
-                    ?: throw IOException("Empty response body")
+                val body =
+                    response.body?.string()
+                        ?: throw IOException("Empty response body")
 
                 try {
                     val type = object : TypeToken<List<RemoteTodo>>() {}.type
@@ -48,7 +50,8 @@ class HttpTaskApi(
             "https://jsonplaceholder.typicode.com"
 
         fun defaultClient(): OkHttpClient =
-            OkHttpClient.Builder()
+            OkHttpClient
+                .Builder()
                 .connectTimeout(8, TimeUnit.SECONDS)
                 .readTimeout(8, TimeUnit.SECONDS)
                 .callTimeout(12, TimeUnit.SECONDS)
@@ -56,5 +59,6 @@ class HttpTaskApi(
     }
 }
 
-class HttpStatusException(val statusCode: Int) :
-    IOException("Server returned HTTP $statusCode")
+class HttpStatusException(
+    val statusCode: Int,
+) : IOException("Server returned HTTP $statusCode")

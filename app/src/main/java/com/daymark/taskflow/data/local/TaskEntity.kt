@@ -14,7 +14,7 @@ data class TaskEntity(
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(defaultValue = "0") val isPinned: Boolean = false,
-    val remoteId: Int? = null
+    val remoteId: Int? = null,
 )
 
 data class Task(
@@ -26,8 +26,9 @@ data class Task(
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
     val isPinned: Boolean = false,
-    val remoteId: Int? = null
+    val remoteId: Int? = null,
 )
 
 fun TaskEntity.toDomain() = Task(id, title, note, priority, dueAt, isCompleted, createdAt, isPinned, remoteId)
+
 fun Task.toEntity() = TaskEntity(id, title, note, priority, dueAt, isCompleted, createdAt, isPinned, remoteId)

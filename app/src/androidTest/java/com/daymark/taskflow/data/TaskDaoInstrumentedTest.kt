@@ -21,31 +21,55 @@ class TaskDaoInstrumentedTest {
 
     @Before fun createDatabase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        database = Room.inMemoryDatabaseBuilder(context, TaskDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
+        database =
+            Room
+                .inMemoryDatabaseBuilder(context, TaskDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
     }
 
-    @After fun closeDatabase() { database.close() }
-
-    @Test fun insertObserveCompleteAndDeleteTask() = runBlocking {
-        val dao = database.taskDao()
-        val id = dao.insert(TaskEntity(title = "Run DAO test", note = "in memory", priority = "NORMAL", dueAt = 10L))
-        assertEquals(1, dao.count())
-        assertEquals("Run DAO test", dao.observeAll().first().single().title)
-        dao.setCompleted(id, true)
-        assertTrue(dao.observeAll().first().single().isCompleted)
-        dao.delete(id)
-        assertEquals(0, dao.count())
+    @After fun closeDatabase() {
+        database.close()
     }
 
-    @Test fun deleteCompletedLeavesOpenTasks() = runBlocking {
-        val dao = database.taskDao()
-        dao.insertAll(listOf(
-            TaskEntity(title = "Done", note = "", priority = "LOW", dueAt = 1L, isCompleted = true),
-            TaskEntity(title = "Open", note = "", priority = "HIGH", dueAt = 2L, isCompleted = false)
-        ))
-        dao.deleteCompleted()
-        assertEquals(listOf("Open"), dao.observeAll().first().map { it.title })
-    }
+    @Test fun insertObserveCompleteAndDeleteTask() =
+        runBlocking {
+            val dao = database.taskDao()
+            val id =
+                dao.insert(
+                    TaskEntity(title = "Run DAO test", note = "in memory", priority = "NORMAL", dueAt = 10L),
+                )
+            assertEquals(1, dao.count())
+            assertEquals(
+                "Run DAO test",
+                dao
+                    .observeAll()
+                    .first()
+                    .single()
+                    .title,
+            )
+            dao.setCompleted(id, true)
+            assertTrue(
+                dao
+                    .observeAll()
+                    .first()
+                    .single()
+                    .isCompleted,
+            )
+            dao.delete(id)
+            assertEquals(0, dao.count())
+        }
+
+    @Test fun deleteCompletedLeavesOpenTasks() =
+        runBlocking {
+            val dao = database.taskDao()
+            dao.insertAll(
+                listOf(
+                    TaskEntity(title = "Done", note = "", priority = "LOW", dueAt = 1L, isCompleted = true),
+                    TaskEntity(title = "Open", note = "", priority = "HIGH", dueAt = 2L, isCompleted = false),
+                ),
+            )
+            dao.deleteCompleted()
+            assertEquals(listOf("Open"), dao.observeAll().first().map { it.title })
+        }
 }

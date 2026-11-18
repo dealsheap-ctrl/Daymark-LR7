@@ -10,25 +10,37 @@ import androidx.fragment.app.Fragment
 import com.daymark.taskflow.BuildConfig
 import com.daymark.taskflow.R
 import com.daymark.taskflow.databinding.FragmentSettingsBinding
+import com.daymark.taskflow.debug.AppLog
 import com.daymark.taskflow.debug.DebugCrashScenarios
 import com.daymark.taskflow.debug.DebugLeakScenarios
-import com.daymark.taskflow.debug.AppLog
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: TasksViewModel get() = (requireActivity() as MainActivity).tasksViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         binding.btnShareApp.setOnClickListener {
             val intent = ShareIntentFactory.create(getString(R.string.share_message))
-            try { startActivity(android.content.Intent.createChooser(intent, getString(R.string.share_chooser_title))) }
-            catch (_: ActivityNotFoundException) { Toast.makeText(requireContext(), R.string.no_share_app, Toast.LENGTH_SHORT).show() }
+            try {
+                startActivity(android.content.Intent.createChooser(intent, getString(R.string.share_chooser_title)))
+            } catch (
+                _: ActivityNotFoundException,
+            ) {
+                Toast.makeText(requireContext(), R.string.no_share_app, Toast.LENGTH_SHORT).show()
+            }
         }
         binding.btnDeleteCompleted.setOnClickListener {
             viewModel.deleteCompleted()
@@ -68,19 +80,26 @@ class SettingsFragment : Fragment() {
      * terminate the whole application. The exception breakpoint can still pause here
      * when Android Studio is configured to break on caught exceptions.
      */
-    private fun runDebugScenario(labelRes: Int, action: () -> Unit) {
+    private fun runDebugScenario(
+        labelRes: Int,
+        action: () -> Unit,
+    ) {
         try {
             action()
         } catch (exception: Exception) {
             val label = getString(labelRes)
             AppLog.e("Caught expected diagnostic exception: $label", exception)
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.debug_exception_caught, exception.javaClass.simpleName),
-                Toast.LENGTH_LONG
-            ).show()
+            Toast
+                .makeText(
+                    requireContext(),
+                    getString(R.string.debug_exception_caught, exception.javaClass.simpleName),
+                    Toast.LENGTH_LONG,
+                ).show()
         }
     }
 
-    override fun onDestroyView() { _binding = null; super.onDestroyView() }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

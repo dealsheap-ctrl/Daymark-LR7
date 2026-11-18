@@ -3,6 +3,8 @@ package com.daymark.taskflow.ui
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
@@ -10,14 +12,12 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.daymark.taskflow.R
 import com.daymark.taskflow.debug.AppOperationTracker
-import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.isEmptyOrNullString
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -48,7 +48,10 @@ class TaskFlowUiTest {
     }
 
     @Test fun syncFinishesAndUpdatesStatusUsingIdlingResource() {
-        onView(withId(R.id.btnSync)).perform(androidx.test.espresso.action.ViewActions.click())
+        onView(withId(R.id.btnSync)).perform(
+            androidx.test.espresso.action.ViewActions
+                .click(),
+        )
         onView(withId(R.id.tvSyncStatus)).check(matches(withText(not(isEmptyOrNullString()))))
         page.assertTaskVisible("UI test imported task")
     }
@@ -70,7 +73,10 @@ class TaskFlowUiTest {
         Intents.init()
         try {
             page.openSettings()
-            onView(withId(R.id.btnShareApp)).perform(androidx.test.espresso.action.ViewActions.click())
+            onView(withId(R.id.btnShareApp)).perform(
+                androidx.test.espresso.action.ViewActions
+                    .click(),
+            )
             intended(hasAction(Intent.ACTION_CHOOSER))
         } finally {
             Intents.release()

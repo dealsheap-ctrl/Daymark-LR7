@@ -15,7 +15,10 @@ import org.hamcrest.Matchers.hasDescendant
 
 /** Page Object keeps UI selectors and actions out of the scenario itself. */
 class TasksPageObject {
-    fun addTask(title: String, note: String = "") {
+    fun addTask(
+        title: String,
+        note: String = "",
+    ) {
         onView(withId(R.id.fabAddTask)).perform(click())
         onView(withId(R.id.inputTaskTitle)).perform(replaceText(title), closeSoftKeyboard())
         if (note.isNotEmpty()) onView(withId(R.id.inputTaskNote)).perform(replaceText(note), closeSoftKeyboard())
@@ -24,11 +27,16 @@ class TasksPageObject {
 
     fun assertTaskVisible(title: String) {
         onView(withId(R.id.recyclerTasks)).perform(
-            RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(title)))
+            RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(title))),
         )
         onView(withText(title)).check(matches(isDisplayed()))
     }
 
-    fun openInsights() { onView(withId(R.id.navigation_insights)).perform(click()) }
-    fun openSettings() { onView(withId(R.id.navigation_settings)).perform(click()) }
+    fun openInsights() {
+        onView(withId(R.id.navigation_insights)).perform(click())
+    }
+
+    fun openSettings() {
+        onView(withId(R.id.navigation_settings)).perform(click())
+    }
 }

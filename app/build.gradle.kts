@@ -97,23 +97,31 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
         csv.required.set(false)
     }
-    classDirectories.setFrom(domainClassFiles.asFileTree.matching {
-        include("com/daymark/taskflow/domain/**")
-    })
+    classDirectories.setFrom(
+        domainClassFiles.asFileTree.matching {
+            include("com/daymark/taskflow/domain/**")
+        },
+    )
     sourceDirectories.setFrom(files("src/main/java"))
     executionData.setFrom(fileTree(buildDir) { include("jacoco/testDebugUnitTest.exec") })
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
     dependsOn("testDebugUnitTest")
-    classDirectories.setFrom(domainClassFiles.asFileTree.matching {
-        include("com/daymark/taskflow/domain/**")
-    })
+    classDirectories.setFrom(
+        domainClassFiles.asFileTree.matching {
+            include("com/daymark/taskflow/domain/**")
+        },
+    )
     executionData.setFrom(fileTree(buildDir) { include("jacoco/testDebugUnitTest.exec") })
     violationRules {
         rule {
             element = "BUNDLE"
-            limit { counter = "LINE"; value = "COVEREDRATIO"; minimum = "0.70".toBigDecimal() }
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.70".toBigDecimal()
+            }
         }
     }
 }

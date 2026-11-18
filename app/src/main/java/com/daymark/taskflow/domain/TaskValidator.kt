@@ -1,6 +1,10 @@
 package com.daymark.taskflow.domain
 
-data class ValidationResult(val isValid: Boolean, val normalizedValue: String, val message: String? = null)
+data class ValidationResult(
+    val isValid: Boolean,
+    val normalizedValue: String,
+    val message: String? = null,
+)
 
 object TaskValidator {
     const val MAX_TITLE_LENGTH = 80

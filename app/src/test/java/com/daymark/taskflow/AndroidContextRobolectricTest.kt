@@ -3,7 +3,7 @@ package com.daymark.taskflow
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
-import com.daymark.taskflow.data.PreferenceStore
+import com.daymark.taskflow.data.local.PreferenceStore
 import com.daymark.taskflow.ui.ShareIntentFactory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

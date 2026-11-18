@@ -1,11 +1,10 @@
 
 package com.daymark.taskflow.debug
 
-import android.app.Activity
 import android.annotation.SuppressLint
+import android.app.Activity
 
 object DebugLeakScenarios {
-
     @Volatile
     @SuppressLint("StaticFieldLeak")
     private var retainedActivity: Activity? = null

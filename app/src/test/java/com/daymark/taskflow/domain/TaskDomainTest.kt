@@ -62,22 +62,24 @@ class TaskDomainTest {
     }
 
     @Test fun metricsCountOpenAndCompletedTasks() {
-        val tasks = listOf(
-            Task(id = 1, title = "A", isCompleted = false),
-            Task(id = 2, title = "B", isCompleted = true),
-            Task(id = 3, title = "C", isCompleted = false)
-        )
+        val tasks =
+            listOf(
+                Task(id = 1, title = "A", isCompleted = false),
+                Task(id = 2, title = "B", isCompleted = true),
+                Task(id = 3, title = "C", isCompleted = false),
+            )
         assertEquals(2, TaskMetrics.openCount(tasks))
         assertEquals(1, TaskMetrics.completedCount(tasks))
     }
 
     @Test fun overdueExcludesCompletedTasks() {
         val now = 10_000L
-        val tasks = listOf(
-            Task(id = 1, title = "Late", dueAt = now - 1),
-            Task(id = 2, title = "Done late", dueAt = now - 2, isCompleted = true),
-            Task(id = 3, title = "Future", dueAt = now + 1)
-        )
+        val tasks =
+            listOf(
+                Task(id = 1, title = "Late", dueAt = now - 1),
+                Task(id = 2, title = "Done late", dueAt = now - 2, isCompleted = true),
+                Task(id = 3, title = "Future", dueAt = now + 1),
+            )
         assertEquals(1, TaskMetrics.overdueCount(tasks, now))
     }
 }

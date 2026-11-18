@@ -8,5 +8,5 @@ data class RemoteTodo(
     val userId: Int = 0,
     val id: Int = 0,
     val title: String = "",
-    val completed: Boolean = false
+    val completed: Boolean = false,
 )
