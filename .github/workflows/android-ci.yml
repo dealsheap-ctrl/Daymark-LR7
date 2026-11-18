@@ -17,8 +17,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+     - name: Install Android SDK packages
+  run: |
+    export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+    echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+    sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
       - name: Lint, unit tests, coverage and assemble
         run: ./gradlew --no-daemon :app:lintDebug :app:ktlintCheck :benchmark:ktlintCheck :app:testDebugUnitTest :app:jacocoTestReport :app:jacocoTestCoverageVerification :app:assembleDebug :app:assembleDebugAndroidTest
       - name: Upload JVM reports and APKs
