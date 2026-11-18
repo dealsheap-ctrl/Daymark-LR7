@@ -37,8 +37,8 @@ class RepositorySyncInstrumentedTest {
     fun repeatedSyncUpdatesImportedRowsInsteadOfCreatingDuplicates() =
         runBlocking {
             val api =
-                object {
-                    override suspend fun fetchTodos() =
+                object : RemoteTaskApi {
+                    override suspend fun fetchTodos(): List<RemoteTodo> =
                         listOf(
                             RemoteTodo(userId = 1, id = 701, title = "stable remote task", completed = false),
                         )

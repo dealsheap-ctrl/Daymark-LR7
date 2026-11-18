@@ -5,8 +5,8 @@ import com.daymark.taskflow.data.remote.RemoteTodo
 
 /** A deterministic API implementation keeps instrumented UI tests independent of the internet. */
 class DaymarkTestApplication : DaymarkApplication() {
-    override fun createRemoteApi() =
-        object {
+    override fun createRemoteApi(): RemoteTaskApi =
+        object : RemoteTaskApi {
             override suspend fun fetchTodos(): List<RemoteTodo> =
                 listOf(
                     RemoteTodo(userId = 1, id = 9001, title = "UI test imported task", completed = false),
