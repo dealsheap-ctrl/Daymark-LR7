@@ -1,0 +1,14 @@
+<resources>
+    <style name="Theme.Daymark" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/forest</item>
+        <item name="colorOnPrimary">@color/paper</item>
+        <item name="colorSecondary">@color/amber</item>
+        <item name="colorSurface">@color/paper</item>
+        <item name="android:colorBackground">@color/canvas</item>
+        <item name="android:statusBarColor">@color/canvas</item>
+        <item name="android:navigationBarColor">@color/canvas</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:fontFamily">sans</item>
+    </style>
+</resources>

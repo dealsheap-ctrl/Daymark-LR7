@@ -1,0 +1,72 @@
+name: Android CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+      - name: Lint, unit tests, coverage and assemble
+        run: ./gradlew --no-daemon :app:lintDebug :app:ktlintCheck :benchmark:ktlintCheck :app:testDebugUnitTest :app:jacocoTestReport :app:jacocoTestCoverageVerification :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Upload JVM reports and APKs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-jvm-reports
+          path: |
+            app/build/reports/lint-results-debug.html
+            app/build/reports/ktlint/
+            benchmark/build/reports/ktlint/
+            app/build/reports/tests/testDebugUnitTest/
+            app/build/reports/jacoco/jacocoTestReport/
+            app/build/outputs/apk/debug/
+            app/build/outputs/apk/androidTest/debug/
+          if-no-files-found: warn
+
+  instrumented:
+    needs: unit-and-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator"
+      - name: Run instrumented suite on API 35 emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          script: ./gradlew --no-daemon :app:connectedDebugAndroidTest :app:createDebugCoverageReport
+      - name: Upload instrumentation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-instrumented-reports
+          path: |
+            app/build/reports/androidTests/
+            app/build/reports/coverage/
+            app/build/outputs/code_coverage/
+            app/build/reports/ktlint/
+          if-no-files-found: warn

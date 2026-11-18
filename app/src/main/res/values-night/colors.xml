@@ -1,0 +1,15 @@
+<resources>
+    <color name="ink">#E8F0EB</color>
+    <color name="muted">#A9B7AF</color>
+    <color name="forest">#89C7AD</color>
+    <color name="forest_dark">#0F2E26</color>
+    <color name="forest_surface">#1B4036</color>
+    <color name="hero_on_surface">#F3F7F4</color>
+    <color name="mint">#294A3E</color>
+    <color name="canvas">#111916</color>
+    <color name="paper">#1A2420</color>
+    <color name="line">#35443C</color>
+    <color name="amber">#E0B56F</color>
+    <color name="rose">#E08E84</color>
+    <color name="lavender">#39374A</color>
+</resources>
